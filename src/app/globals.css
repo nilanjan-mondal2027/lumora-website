@@ -1,0 +1,217 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────────────────
+   TYPOGRAPHY UTILITIES (CLAUDE.md typography · P0.3). Defined below.
+     .display-hero    — Bricolage, hero    clamp(3.5rem, 9vw, 8.5rem)
+     .display-chapter — Bricolage, chapter clamp(2.5rem, 6vw, 5rem)
+     .pull-quote      — Instrument Serif italic, clamp(1.6rem, 3.2vw, 2.6rem), 28ch
+     .eyebrow         — mono, uppercase, tracking .18em
+   Serif (--font-serif) is reserved for the two pull-quote moments + About
+   narrative only. Never for UI or body. Do NOT apply serif elsewhere.
+   ───────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Design tokens — see CLAUDE.md. This file is the ONLY place they are defined. */
+  --color-ink: #0a0e1a; /* site background */
+  --color-ink-raised: #101826; /* cards, panels */
+  --color-ink-raised-2: #171f2e; /* deepest raised surface (same ink family) */
+  --color-line: rgba(247, 246, 241, 0.08); /* hairline borders */
+  --color-paper: #f7f6f1; /* primary text */
+  --color-mist: #98a0b3; /* secondary text */
+
+  /* Temperature system. volt = raw / unengineered / machine-state ONLY
+     (three/ scenes + data labels). lumen = engineered / complete /
+     human-facing: all UI chrome, CTAs, focus rings, the finale. */
+  --color-volt: #3d8bff; /* raw machine-state */
+  --color-volt-bright: #7ab1ff;
+  --color-lumen: #dea82f; /* brand light — engineered state, CTAs, the Halo dot */
+  --color-lumen-bright: #f2c24e; /* glow peaks, hover states */
+
+  --font-display: var(--font-bricolage);
+  --font-body: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-instrument-serif);
+
+  --ease-signal: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@theme inline {
+  --color-ink: var(--color-ink);
+  --color-ink-raised: var(--color-ink-raised);
+  --color-ink-raised-2: var(--color-ink-raised-2);
+  --color-line: var(--color-line);
+  --color-paper: var(--color-paper);
+  --color-mist: var(--color-mist);
+  --color-volt: var(--color-volt);
+  --color-volt-bright: var(--color-volt-bright);
+  --color-lumen: var(--color-lumen);
+  --color-lumen-bright: var(--color-lumen-bright);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+/* In @layer base so Tailwind utilities (e.g. focus:border-lumen on inputs) win —
+   an unlayered `*` rule outranks any layered utility regardless of specificity. */
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+}
+
+html {
+  background: var(--color-ink);
+  scroll-behavior: auto;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-lumen) 35%, transparent);
+  color: var(--color-paper);
+}
+
+/* Idle breathing Halo (Contact). Subtle 4s scale + glow loop. */
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.82;
+  }
+  50% {
+    transform: scale(1.045);
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .halo-breathe {
+    animation: none !important;
+  }
+}
+
+/* thin, quiet scrollbar so the schematic motif isn't fighting chrome UI */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--color-paper) 12%, transparent);
+  border-radius: 999px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-lumen);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.text-hero {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 0.94;
+  font-size: clamp(3rem, 3.4vw + 2.2rem, 7.5rem);
+}
+
+.text-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  font-size: clamp(2.25rem, 1.6vw + 1.7rem, 4rem);
+}
+
+.text-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-mist);
+}
+
+/* Typography roles — see the header note at the top of this file. */
+.display-hero {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 0.94;
+  font-size: clamp(3.5rem, 9vw, 8.5rem);
+}
+
+.display-chapter {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+}
+
+.pull-quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  line-height: 1.2;
+  color: var(--color-paper);
+  max-width: 28ch;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-mist);
+}
+
+.hairline {
+  border: 1px solid color-mix(in srgb, var(--color-paper) 10%, transparent);
+}
+
+/* Raw machine-state glow. Reserved for three/ + data contexts — never UI chrome. */
+.glow-volt {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-volt) 40%, transparent),
+    0 0 40px -8px color-mix(in srgb, var(--color-volt) 70%, transparent);
+}
+
+/* Engineered / human-facing glow. The default for CTAs, success states, chrome. */
+.glow-lumen {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-lumen) 40%, transparent),
+    0 0 40px -8px color-mix(in srgb, var(--color-lumen) 70%, transparent);
+}
+
+.bg-grain {
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    color-mix(in srgb, var(--color-paper) 4%, transparent) 1px,
+    transparent 0
+  );
+  background-size: 3px 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
